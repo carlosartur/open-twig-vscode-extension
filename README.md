@@ -1,65 +1,54 @@
-# open-twig README
 
-This is the README for your extension "open-twig". After writing up a brief description, we recommend including the following sections.
+# open-twig README
+![](https://raw.githubusercontent.com/carlosartur/open-twig-vscode-extension/master/usage-animation/pjDrNBcZkN.gif)
+
+The open-twig extension was made for working on Symfony projects where twig template calls aren't just the name of the twig file. It read the cache file of Symfony calls of twigs and opens the right file for you, doesn't matter the name of the template have in project.
+
+It's perfect if your project uses namespaces for calling twigs, as seen in: https://symfony.com/doc/3.4/templating/namespaced_paths.html
 
 ## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Opens a twig reading it's location from Symfony's cache. 
+Future versions will open the file from location if the template is not namespaced.
 
 ## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+To make the extension work, you must put the settings on "settings.json" in your vscode:
+```
+"openTwig": {
+	"templateFile": "your-relative-path-to-templates-cache-file.php"
+},
+```
+If your template cache file is outside your project, make a symbolic link from this file from inside the project. Then, put the location on this setting.
 
 ## Extension Settings
+This extension have this settings:
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+*  `openTwig.templateFile`: relative path of your templates namespacing cache.
 
-For example:
+*  `openTwig.regexes[][regex]`: add a regex to replace on your namespace for transform to twig file name.
+*  `openTwig.regexes[][replace]`: text to replace the regex on setting above.
 
-This extension contributes the following settings:
+`openTwig.regexes` setting example, adding a setting to replace ":" to "/". you can add multiple regular expressions as you wish:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
+```
+"openTwig": {
+	"templateFile": "your-relative-path-to-templates-cache-file.php",
+	"regexes": [
+		{
+			"regex": "\:", 
+			"replace": "\/"
+		}
+	]
+},
+```
+  
 ## Known Issues
+If openTwig.templateFile is not set, null or false, the extension will not work.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+If template cache file haven't the correct structure (is not generated automatically by symfony), the extension may not work properly.
+  
 
 ## Release Notes
-
-Users appreciate release notes as you update your extension.
+ 
 
 ### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of open-twig.

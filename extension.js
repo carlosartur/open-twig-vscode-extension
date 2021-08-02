@@ -1,26 +1,11 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 const path = require('path');
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "open-twig" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-
     let disposable = vscode.commands.registerCommand('open-twig.openTwig', async function () {
-		// The code you place here will be executed every time your command is executed
         let templateFilePath = vscode.workspace.getConfiguration('openTwig').get("templateFile"),
             regexes = vscode.workspace.getConfiguration('openTwig').get("regexes") || [];
 
@@ -85,15 +70,21 @@ function activate(context) {
             twigName = twigName.replace(new RegExp(regex), replace);
         })
 
-        if (twigFiles[twigName]) {
-		    const twigFileUri = folderUri.with({ path: path.join(folderUri.path, twigFiles[twigName]) });
+        try {
+            const twigFile = (twigFiles[twigName] || '')
+                .replace(/(\"|\')/g, '');
+            if (twigFile) {
+                const twigFileUri = folderUri.with({ path: path.join(folderUri.path, twigFile) });
 
-            const twigFileDocument = await vscode.window.showTextDocument(twigFileUri);
-            console.log(twigFileDocument);
-            return;
+                const twigFileDocument = await vscode.window.showTextDocument(twigFileUri);
+                console.log(twigFileDocument);
+                return;
+            }
+        } catch (error) {
+            console.error(error);
         }
 
-        vscode.window.showInformationMessage(`Template '${twigName}' não encontrado.`);
+        vscode.window.showInformationMessage(`Template '${twigName}' cannot be found.`);
 	});
 
 	context.subscriptions.push(disposable);
